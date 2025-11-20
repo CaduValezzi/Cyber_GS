@@ -1,0 +1,34 @@
+name: ZAP Scan CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  zap_scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Subir aplicação vulnerável (DVWA)
+        run: |
+          docker run -d --name dvwa -p 8080:80 vulnerables/web-dvwa
+          # espera alguns segundos pro container subir
+          sleep 15
+
+      - name: Rodar OWASP ZAP Full Scan
+        run: |
+          docker run -t --network="host" owasp/zap2docker-stable zap-full-scan.py \
+            -t http://localhost:8080 \
+            -r relatorio-zap.html \
+            -I
+
+      - name: Upload do relatório do ZAP
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-report
+          path: relatorio-zap.html
