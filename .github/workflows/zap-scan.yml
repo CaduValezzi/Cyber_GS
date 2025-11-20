@@ -35,7 +35,7 @@ jobs:
             -v $(pwd):/zap/wrk:rw \
             ghcr.io/zaproxy/zaproxy:stable zap-full-scan.py \
               -t http://localhost:5000 \
-              -r /zap/wrk/relatorio-zap.html \
+              -r relatorio-zap.html \
               -I || true
 
       - name: Upload ZAP report
