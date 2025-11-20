@@ -1,38 +1,48 @@
-name: ZAP Scan CI
+name: CI - Security
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
-  zap_scan:
+  test-and-scan:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout do código
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Criar rede para ZAP + DVWA
-        run: docker network create zapnet
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
 
-      - name: Subir DVWA
+      - name: Install dependencies
         run: |
-          docker run -d --name dvwa --network zapnet vulnerables/web-dvwa
-          # dá um tempo pro container subir
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: |
+          pytest -q
+
+      - name: Start Flask app
+        run: |
+          nohup python app.py > app.log 2>&1 &
           sleep 20
 
-      - name: Rodar OWASP ZAP (full scan)
+      - name: Run OWASP ZAP (DAST)
         run: |
-          docker run -t --network zapnet \
-            -v $(pwd):/zap/wrk/:rw \
+          docker run -t --network="host" \
+            -v $(pwd):/zap/wrk:rw \
             ghcr.io/zaproxy/zaproxy:stable zap-full-scan.py \
-              -t http://dvwa \
+              -t http://localhost:5000 \
               -r /zap/wrk/relatorio-zap.html \
               -I
 
-      - name: Upload do relatório
+      - name: Upload ZAP report
         uses: actions/upload-artifact@v4
         with:
           name: zap-report
