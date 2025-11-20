@@ -14,17 +14,21 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
 
+      - name: Criar rede para ZAP + DVWA
+        run: docker network create zapnet
+
       - name: Subir DVWA
         run: |
-          docker run -d --name dvwa -p 8080:80 vulnerables/web-dvwa
-          sleep 15
+          docker run -d --name dvwa --network zapnet vulnerables/web-dvwa
+          # dá um tempo pro container subir
+          sleep 20
 
-      - name: Rodar OWASP ZAP
+      - name: Rodar OWASP ZAP (full scan)
         run: |
-          docker run -t --network="host" \
+          docker run -t --network zapnet \
             -v $(pwd):/zap/wrk/:rw \
             ghcr.io/zaproxy/zaproxy:stable zap-full-scan.py \
-              -t http://localhost:8080 \
+              -t http://dvwa \
               -r /zap/wrk/relatorio-zap.html \
               -I
 
