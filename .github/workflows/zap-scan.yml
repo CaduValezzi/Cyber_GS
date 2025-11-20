@@ -14,20 +14,19 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      - name: Subir aplicação vulnerável (DVWA)
+      - name: Subir DVWA
         run: |
           docker run -d --name dvwa -p 8080:80 vulnerables/web-dvwa
-          # espera alguns segundos pro container subir
           sleep 15
 
-      - name: Rodar OWASP ZAP Full Scan
+      - name: Rodar OWASP ZAP
         run: |
-          docker run -t --network="host" owasp/zap2docker-stable zap-full-scan.py \
+          docker run -t --network="host" ghcr.io/zaproxy/zaproxy:stable zap-full-scan.py \
             -t http://localhost:8080 \
             -r relatorio-zap.html \
             -I
 
-      - name: Upload do relatório do ZAP
+      - name: Exportar relatório
         uses: actions/upload-artifact@v4
         with:
           name: zap-report
