@@ -21,12 +21,14 @@ jobs:
 
       - name: Rodar OWASP ZAP
         run: |
-          docker run -t --network="host" ghcr.io/zaproxy/zaproxy:stable zap-full-scan.py \
-            -t http://localhost:8080 \
-            -r relatorio-zap.html \
-            -I
+          docker run -t --network="host" \
+            -v $(pwd):/zap/wrk/:rw \
+            ghcr.io/zaproxy/zaproxy:stable zap-full-scan.py \
+              -t http://localhost:8080 \
+              -r /zap/wrk/relatorio-zap.html \
+              -I
 
-      - name: Exportar relatório
+      - name: Upload do relatório
         uses: actions/upload-artifact@v4
         with:
           name: zap-report
