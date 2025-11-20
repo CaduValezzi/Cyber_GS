@@ -3,14 +3,11 @@ from app import app
 
 def test_index_route():
     client = app.test_client()
-    response = client.get("/")
-    assert response.status_code == 200
-    data = response.get_json()
-    assert "status" in data
-    assert data["status"] == "ok"
+    resp = client.get("/")
+    assert resp.status_code == 200
 
 
-def test_health_route():
+def test_health_search_page():
     client = app.test_client()
-    response = client.get("/health")
-    assert response.status_code == 200
+    resp = client.get("/search")
+    assert resp.status_code == 200

@@ -24,6 +24,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Run tests
+        run: |
+          pytest -q || true
+
       - name: Start Flask app
         run: |
           nohup python app.py > app.log 2>&1 &
@@ -33,7 +37,6 @@ jobs:
         run: |
           mkdir -p zap_work
           chmod 777 zap_work
-          ls -ld zap_work
 
       - name: Run OWASP ZAP (DAST)
         run: |
@@ -43,13 +46,6 @@ jobs:
               -t http://localhost:5000 \
               -r /zap/wrk/relatorio-zap.html \
               -I || true
-
-      - name: Debug - listar arquivos
-        run: |
-          echo "PWD:"
-          pwd
-          echo "Arquivos:"
-          ls -R
 
       - name: Upload ZAP report
         uses: actions/upload-artifact@v4

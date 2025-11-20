@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Login</h2>
+
+  {% if error %}
+    <p style="color:red;">{{ error }}</p>
+  {% endif %}
+
+  <form method="post">
+    <div>
+      <label>Usuário:</label>
+      <input type="text" name="username">
+    </div>
+    <div>
+      <label>Senha:</label>
+      <input type="password" name="password">
+    </div>
+    <button type="submit">Entrar</button>
+  </form>
+
+  <p>Dica maligna: tente algo tipo <code>' OR '1'='1</code> no usuário/senha.</p>
+{% endblock %}

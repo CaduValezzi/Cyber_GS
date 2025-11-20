@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Debug interno (expondo tudo mesmo)</h2>
+
+  <h3>Config da aplicação</h3>
+  <pre>{{ config }}</pre>
+
+  <h3>Usuários e senhas em texto puro</h3>
+  <table border="1" cellpadding="5">
+    <tr>
+      <th>ID</th><th>Username</th><th>Password</th><th>Role</th>
+    </tr>
+    {% for u in users %}
+      <tr>
+        <td>{{ u['id'] }}</td>
+        <td>{{ u['username'] }}</td>
+        <td>{{ u['password'] }}</td>
+        <td>{{ u['role'] }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+
+  <p>Se isso aqui fosse produção, alguém já tava demitido.</p>
+{% endblock %}

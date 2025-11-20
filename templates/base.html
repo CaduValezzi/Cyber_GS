@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title or "Cyber GS - App Vulnerável" }}</title>
+</head>
+<body>
+  <header>
+    <h1>Cyber GS - Aplicação Intencionalmente Vulnerável</h1>
+    <nav>
+      <a href="/">Home</a> |
+      <a href="/login">Login</a> |
+      <a href="/search">Buscar usuários</a> |
+      <a href="/debug">Debug</a> |
+      <a href="/insecure-header">Header inseguro</a>
+    </nav>
+    <hr>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

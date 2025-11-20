@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Perfil do usuário</h2>
+
+  <p><strong>ID:</strong> {{ user['id'] }}</p>
+  <p><strong>Username:</strong> {{ user['username'] }}</p>
+  <p><strong>Role:</strong> {{ user['role'] }}</p>
+
+  <p>(Nenhuma autenticação de verdade foi feita pra chegar aqui.)</p>
+{% endblock %}

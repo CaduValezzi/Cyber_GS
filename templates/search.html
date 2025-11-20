@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Buscar usuários</h2>
+
+  <form method="get">
+    <label>Termo de busca:</label>
+    <input type="text" name="q" value="{{ q }}">
+    <button type="submit">Buscar</button>
+  </form>
+
+  {% if q %}
+    <!-- XSS: injeção direta aqui sem escape extra -->
+    <h3>Você buscou por: {{ q|safe }}</h3>
+  {% endif %}
+
+  {% if results %}
+    <ul>
+      {% for user in results %}
+        <li><a href="/profile?id={{ user['id'] }}">{{ user['username'] }} ({{ user['role'] }})</a></li>
+      {% endfor %}
+    </ul>
+  {% elif q %}
+    <p>Nenhum usuário encontrado.</p>
+  {% endif %}
+{% endblock %}
